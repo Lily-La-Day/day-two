@@ -141,12 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if ( event.target.classList.contains('droptarget')) {
 
       const data = event.dataTransfer.getData('Text')
-
+      console.log('data', data)
       const before = document.querySelector(`[data-index="${parseInt(data)*10}"`)
-
-
+      console.log(before)
       const nouveau = document.createElement('h3')
-
       nouveau.innerText = before.innerText
 
 
@@ -154,7 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         event.target.childNodes[0].data = nouveau.innerText
 
-      before.innerHTML = `<h3 data-index=${event.target.dataset.index} class="drag droptarget drag-target" id="dragtarget" >${event.target.nextElementSibling.innerText}</h3><h3 data-index=${event.target.dataset.index} class="hidden" >${event.target.nextElementSibling.innerText}</h3>`
+      // before.innerHTML = `<h3 data-index=${event.target.dataset.index} class="drag droptarget drag-target" id="dragtarget" >${event.target.nextElementSibling.innerText}</h3><h3 data-index=${event.target.dataset.index} class="hidden" >${event.target.nextElementSibling.innerText}</h3>`
+      before.firstChild.innerText = event.target.nextElementSibling.innerText
+      before.lastChild.innerText = event.target.nextElementSibling.innerText
 
       const changeSibling = () => {
         if(nouveau.innerText !== '')
