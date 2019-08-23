@@ -78,16 +78,14 @@ body {
 
 .container {
     border: 1px solid black;
+padding-left: 1em;
+padding-right: 1em;
 }
 
 .droptarget, .container {
   /* display: none; */
-  display: flex;
-  width: 75px;
-  height: 2em;
 
 
-  margin: 2em;
 }
 
 .hidden {
@@ -95,9 +93,19 @@ body {
 }
 
 .order-container {
-  width: 80%;
-  display: flex;
-  flex-wrap: nowrap;
+  padding: 1em;
+  width: 90%;
+  display: grid;
+/* justify-content: center; */
+align-content: center;
+grid-column-gap: 0.5em;
+grid-row-gap: 0.5em;
+grid-template-columns: repeat(8, 1fr);
 
 
+
+}
+
+.sentence {
+  grid-row: 1;
 }

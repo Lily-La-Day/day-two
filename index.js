@@ -15,9 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return questions[Math.floor(Math.random() * question.length -1)]
   }
 
-  // question.addEventListener('click', )
 
-  // const functions = [vowelCount, reverseWord, wordType]
 
   const vowelCount = (sentence) => {
     const vowelArray = ['a', 'e', 'i', 'o', 'u']
@@ -41,35 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
-  // const changeOrder = (e, el) => {
-  //   console.log(e.target.innerText)
-  //
-  //
-  //   el.addEventListener('dragend', function changeOrder(e, el) {
-  //     console.log(e, el)
-  //   })
-  // }
-
-
 
 
 
   const toChangeOrder = () => {
     const draggable = document.querySelectorAll('.drag')
-    // console.log(draggable)
     draggable.forEach(el => {
-      // console.log(el)
-
       el.draggable = true
-
-
-
-
     })
-
-
-
-
 
   }
 
@@ -90,12 +67,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  const correctOrder = (word) => {
 
 
+    const correct = document.createElement('div')
+
+    correct.classList.add('container')
+    correct.classList.add('sentence')
 
 
+    axios.get(`https://wordsapiv1.p.mashape.com/words/${word}`,  {
+
+      headers: { 'X-Mashape-Key': '3460369150msh8609f9e537602d4p1446a9jsnb662278c8800'}
+    })
+      .then((res) => {
+        let type = ''
+        console.log(word)
 
 
+        if (!res.data.results ) type = 'pronoun'
+        else  type = res.data.results[0].partOfSpeech
+        if (word === 'why'){
+
+          type = 'adverb'
+
+        }
+        if (word === 'do'){
+
+          type = 'adverb'
+
+        }
+
+
+        correct.innerHTML = `<h3>${word}</h3><h4 class="correct hidden">${type}</h4>`
+
+      })
+
+
+    orderContainer.appendChild(correct)
+    setTimeout(determine, 3000)
+
+
+  }
+
+  const determine = () => {
+    const correctArr = [...document.querySelectorAll('.correct')]
+    const correct = correctArr.map(el => el.innerText)
+    const answersArr = [...document.querySelectorAll('.drag-target')]
+    const answers = answersArr.map(el => el.innerText)
+    console.log(answers, correctArr)
+    winFunction(answers, correct)
+  }
 
 
   const makeDiv = (word) => {
@@ -110,27 +132,14 @@ document.addEventListener('DOMContentLoaded', () => {
     orderContainer.appendChild(option)
 
 
+
   }
 
   document.addEventListener('dragstart', function(event) {
   // The dataTransfer.setData() method sets the data type and the value of the dragged data
     event.dataTransfer.setData('Text', event.target.dataset.index)
-    console.log(event.target.dataset.index)
-    // const before = document.querySelector(`[data-index="${data*10}"`)
-    // before.dataTransfer.setData('Text', )
-    // console.log('drag start', event.target.innerText)
-    // event.dataTransfer.setData('Text', event.target.id)
   })
 
-  document.addEventListener('dragenter', function(event) {
-    if ( event.target.classList.contains('droptarget')) {
-      const data = event.dataTransfer.getData('Text')
-      // const before = document.querySelector(`[data-index="${data}"`)
-      console.log(data)
-      // console.log('dragging data', data)
-      // event.target.innerText = data
-    }
-  })
 
   document.addEventListener('dragover', function(event) {
     event.preventDefault()
@@ -138,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('drop', function(event) {
     event.preventDefault()
-    if ( event.target.classList.contains('droptarget')) {
+    if ((event.target.classList.contains('droptarget')) && (event.target.draggable === true)) {
 
       const data = event.dataTransfer.getData('Text')
       console.log('data', data)
@@ -152,18 +161,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         event.target.childNodes[0].data = nouveau.innerText
 
-      // before.innerHTML = `<h3 data-index=${event.target.dataset.index} class="drag droptarget drag-target" id="dragtarget" >${event.target.nextElementSibling.innerText}</h3><h3 data-index=${event.target.dataset.index} class="hidden" >${event.target.nextElementSibling.innerText}</h3>`
       before.firstChild.innerText = event.target.nextElementSibling.innerText
       before.lastChild.innerText = event.target.nextElementSibling.innerText
 
       const changeSibling = () => {
         if(nouveau.innerText !== '')
-          console.log('before', event.target.nextElementSibling, before.innerText)
-        event.target.nextElementSibling.innerText = nouveau.innerText
+
+          event.target.nextElementSibling.innerText = nouveau.innerText
       }
 
       setTimeout(changeSibling, 100)
       toChangeOrder()
+      determine()
 
     }
   })
@@ -174,71 +183,53 @@ document.addEventListener('DOMContentLoaded', () => {
   const wordType = (sentence) => {
 
     sentence = sentence.replace(/[^A-Za-z]/g, ' ').toLowerCase()
-    console.log(sentence.trim())
-    console.log(sentence.trim().split(' ').length)
-
-    let wordTypes = []
-    const array = []
+    const correct = sentence.trim().split(' ').map(word => correctOrder(word))
     wordTypes = sentence.trim().split(' ').map(word => {
 
-      word = axios.get(`https://wordsapiv1.p.mashape.com/words/${word}`,  {
+      axios.get(`https://wordsapiv1.p.mashape.com/words/${word}`,  {
 
         headers: { 'X-Mashape-Key': '3460369150msh8609f9e537602d4p1446a9jsnb662278c8800'}
       })
         .then((res) => {
+          let type = ''
+          if (!res.data.results ) type = 'pronoun'
+          else  type = res.data.results[0].partOfSpeech
+          if (word === 'why'){
 
-          array.concat(res.data.results[0].partOfSpeech)
-          if (!res.data.results ) word = 'pronoun'
-          else  word = res.data.results[0].partOfSpeech
+            type = 'adverb'
+
+          }
+          if (word === 'do'){
+
+            type = 'adverb'
+
+          }
 
 
 
-          makeDiv(word)
 
-
-
-
-
-
+          makeDiv(type)
         })
 
         .catch((err => console.log(err)))
 
-
-
-
-
-
     })
+
+
     setTimeout(getLength, 2000)
-    console.log(wordTypes)
+
 
   }
-  // setTimeout(getLength, 100)
+
+
+  const winFunction = (answers, correct) => {
+    console.log('win', answers, correct)
+    if(answers.join() === correct.join()) console.log('the same')
+    else console.log('not the same')
+  }
+
   wordType(questions[0])
 
 
-  const functionQs = [
-
-    {
-      function: vowelCount,
-      question: 'How many vowels are there in this setence?'
-    },
-    {
-      function: reverseWord,
-      question: 'Write this sentence with the letters of each word in reverse order.'
-    },
-    {
-      function: wordType,
-      question: 'Put the word types in the correct order to correspond with the words in this sentence.'
-    }
-  ]
-
-
-
-
-
-  //
-  // console.log(questions)
 
 })
