@@ -6,15 +6,17 @@
 body {
   display: grid;
   height: 90vh;
-  /* grid-template-columns: 40% 40%; */
-  /* grid-template-rows: 40vh 40vh auto; */
+  grid-template-columns: 10% 70% 10%;
+  grid-template-rows: 40vh 40vh auto;
   justify-content: space-between;
+  align-content: space-between;
+
 }
 
+.game {
+  grid-column: 2;
+}
 .main {
-
-
-
   height: 90vh;
 
 
@@ -49,7 +51,8 @@ body {
 }
 
 .writing-area {
-  height: 80%;
+  height: 2em;
+  margin: 1em;
 }
 .form-style button,
 .form-style input[type="submit"], button, .git-hub-link  {
@@ -60,7 +63,7 @@ body {
   cursor: pointer;
   color: #FFFFFF;
   font-family: 'Open Sans', sans-serif;
-
+margin: 5em;
 
   text-decoration: none;
   text-transform: uppercase;

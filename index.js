@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const next = document.querySelector('.next')
   const writingArea = document.querySelector('.writing-area')
   const container = document.querySelector('.order-container')
+  const correct = document.querySelector('.correct')
 
+  const sentenceContainer = document.querySelector('.sentence')
 
   const questions = [
     'Why do you want to be a developer?', 'Tell me about your background.', 'Where have you worked in the past?', 'How did you get into web development?', 'How do you deal with people you do not necessarily get on with?', 'Tell me about a time you had an argument or dispute at work.', 'What is your biggest weakness?', 'How did you go about working in a group and what position did you assume?', 'What do you do when you come across a problem you can not solve?', 'Name one time you have had to turn around an issue during a difficult situation.', 'Why do you think you will be successful in this job?', 'Tell me about a time when you worked towards a very stretching goal/ target. How successful were you in meeting your target?', 'Have you ever had a bad experience with an employer?', 'Where do you expect to be in five years’ time?', 'Give an example of a time when you showed initiative.', 'What motivates you?', 'Tell me a about a time when you had a problem, (technical and non- technical) and what did you do about it.', 'Tell me about your involvement during your last role when you worked towards a very stretching target while leading a team', 'What is your favourite programming language and why?'
@@ -30,15 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const vowelCount = (sentence) => {
+
+    container.style.display = 'none'
     writingArea.style.display = 'flex'
     question.innerText = 'How many vowels?'
-
+    sentenceContainer.innerText = sentence
     const vowelArray = ['a', 'e', 'i', 'o', 'u']
-    return sentence.split('').filter(letter => {
+    correct.innerText = sentence.split('').filter(letter => {
 
       if(vowelArray.includes(letter)) return letter
 
     }).length
+
 
 
   }
@@ -46,13 +51,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const reverseWord = (sentence) => {
+    container.style.display = 'none'
     writingArea.style.display = 'flex'
     question.innerText = 'Type The sentence below but reverse the letters of each word'
+    sentenceContainer.innerText = sentence
     const split = sentence.split(' ')
     const reversed = split.map(word => {
-      return word.split('').reverse().join('')
+      return word.split('').reverse().join(' ')
     })
-    return reversed
+    correct.innerText = reversed
 
   }
 
@@ -129,10 +136,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const determine = (e) => {
     e.preventDefault()
+    let correct
+    let answers
     const correctArr = [...document.querySelectorAll('.correct')]
-    const correct = correctArr.map(el => el.innerText)
+    if(correctArr.length > 0)
+      correct = correctArr.map(el => el.innerText)
     const answersArr = [...document.querySelectorAll('.drag-target')]
-    const answers = answersArr.map(el => el.innerText)
+    if(answersArr.length > 0)
+      answers = answersArr.map(el => el.innerText)
+    else correct =
     console.log(answers, correct)
     winFunction(answers, correct)
   }
@@ -211,6 +223,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const wordType = (sentence) => {
     container.style.display = 'grid'
+    writingArea.style.display = 'none'
+    question.innerText = 'Put the word types in the correct order'
+    sentenceContainer.innerText = sentence
     sentence = sentence.replace(/[^A-Za-z]/g, ' ').toLowerCase()
     const correct = sentence.trim().split(' ').map(word => correctOrder(word))
     wordTypes = sentence.trim().split(' ').map(word => {
@@ -281,7 +296,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
+  const changeHandler = (e) => {
+
+    const data = e.target.value
+    console.log(data)
+  }
+
   next.addEventListener('click', getQuestion)
+
+  writingArea.addEventListener('keydown', changeHandler)
 
   // makeQuestion()
 
