@@ -88,9 +88,7 @@ padding-right: 1em;
 
 }
 
-.hidden {
-  display: none;
-}
+
 
 .order-container {
   padding: 1em;
@@ -106,6 +104,14 @@ grid-template-columns: repeat(8, 1fr);
 
 }
 
+.randomise {
+  grid-row: 2 !important;
+}
+
 .sentence {
   grid-row: 1;
+}
+
+.hidden {
+  display: none;
 }
