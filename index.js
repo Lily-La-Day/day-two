@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const getPhrase = () => {
-    wordType(questions[Math.floor(Math.random() * questions.length -1)])
+    wordType(questions[Math.floor(Math.random() * questions.length )])
   }
 
 
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sentenceContainer.innerText = sentence
     const split = sentence.split(' ')
     const reversed = split.map(word => {
-      return word.split('').reverse().join(' ')
+      return word.split(',').reverse().join('')
     })
     correct.innerText = reversed
 
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
 
-        correct.innerHTML = `<h3>${word}</h3><h4 class="correct hidden">${type}</h4>`
+        correct.innerHTML = `<h3>${word}</h3><h4 class="correct hidden type">${type}</h4>`
 
       })
 
@@ -134,20 +134,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
+
+  const clear = () => {
+    const correct = document.querySelectorAll('.correct')
+    correct.forEach(correct => correct.innerText = '')
+  }
+  //not right
   const determine = (e) => {
     e.preventDefault()
     let correct
     let answers
     const correctArr = [...document.querySelectorAll('.correct')]
     if(correctArr.length > 0)
-      correct = correctArr.map(el => el.innerText)
-    const answersArr = [...document.querySelectorAll('.drag-target')]
-    if(answersArr.length > 0)
+      correct = correctArr.filter(el => el.innerText).map(el => el.innerText)
+    let answersArr
+    answersArr = [...document.querySelectorAll('.drag-target')]
+    if(answersArr.length > 0) {
+      console.log('order')
       answers = answersArr.map(el => el.innerText)
-    else correct =
-    console.log(answers, correct)
+    } else {
+      correct = correctArr.filter(el => el.innerText).map(el => el.innerText)
+      answers = document.querySelector('.input').value
+    }
+    console.log('determine', answers, correct)
     winFunction(answers, correct)
   }
+
+  //   const determine = () => {
+  //   const correctArr = [...document.querySelectorAll('.correct')]
+  //   const correct = correctArr.map(el => el.innerText)
+  //   const answersArr = [...document.querySelectorAll('.drag-target')]
+  //   const answers = answersArr.map(el => el.innerText)
+  //   console.log(answers, correctArr)
+  //   winFunction(answers, correct)
+  // }
 
   button.addEventListener('click', determine)
 
@@ -269,11 +289,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const winFunction = (answers, correct) => {
-    console.log('win', answers, correct)
+    console.log('win', answers)
     win.classList.remove('hidden')
-    if(answers.join() !== correct.join()) win.innerText = 'Incorrect'
-    if(answers.join() === correct.join()) win.innerText = 'correct'
 
+    if(answers !== correct) win.innerText = 'Incorrect'
+    if(answers === correct) win.innerText = 'correct'
+
+    if([answers].length > 1){
+      if(answers.join() !== correct.join()) win.innerText = 'Incorrect'
+      if(answers.join() === correct.join()) win.innerText = 'correct'
+    }
   }
 
 
@@ -287,6 +312,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const quizQuestions = ['reverseWord', 'vowelCount', 'wordType']
 
   const getQuestion = () => {
+    clear()
+    win.classList.add('hidden')
     const sentence = questions[Math.floor(Math.random() * questions.length -1)]
 
     const func = quizQuestions[Math.floor(Math.random() * quizQuestions.length )]
@@ -299,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const changeHandler = (e) => {
 
     const data = e.target.value
+
     console.log(data)
   }
 
